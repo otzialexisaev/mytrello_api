@@ -10,14 +10,19 @@ R::setup('mysql:host=localhost;dbname=mytrello',
 $post =  json_decode(file_get_contents('php://input'), true);
 
 $title = isset($post['title']) ? $post['title'] : die();
+$desk_id = isset($post['desk_id']) ? $post['desk_id'] : die();
 
 // todo проверять повторы
 
 //var_dump($title);
 //
-$desk = R::dispense('desks');
-$desk->title = $title;
-R::store($desk);
+$list = R::dispense('lists');
+$list->title = $title;
+$listId = R::store($list);
 
+$link = R::dispense('desks2lists');
+$link->desk_id = $desk_id;
+$link->list_id = $listId;
+R::store($link);
 
 //echo json_encode($data);
